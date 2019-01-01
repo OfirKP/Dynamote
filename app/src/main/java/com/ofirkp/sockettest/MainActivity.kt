@@ -15,7 +15,7 @@ import java.net.DatagramPacket
 import java.net.DatagramSocket
 import java.net.InetAddress
 
-// Test for GitHub
+// Test 00:48 2\2\19 for GitHub
 
 class MainActivity : AppCompatActivity() {
 
