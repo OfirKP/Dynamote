@@ -20,7 +20,7 @@ import java.net.InetAddress
 class MainActivity : AppCompatActivity() {
 
     internal inner class MyThread(caption: String) : Thread(caption) {
-
+        // This is a test for GitHub
         fun showToast(toast: String) {
             runOnUiThread { Toast.makeText(this@MainActivity, toast, Toast.LENGTH_LONG).show() }
         }
