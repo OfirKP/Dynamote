@@ -97,7 +97,7 @@ class MainActivity : AppCompatActivity() {
             Thread {
                 outStream?.writeUTF(editText.text.toString())
                 outStream?.flush()
-                runOnUiThread() {
+                runOnUiThread {
                     Toast.makeText(this, "Sent ${editText.text}!", Toast.LENGTH_LONG).show()
                 }
             }.start()
