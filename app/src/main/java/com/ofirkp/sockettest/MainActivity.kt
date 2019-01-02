@@ -1,5 +1,6 @@
 package com.ofirkp.sockettest
 
+import android.content.Context
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -19,10 +20,15 @@ import java.net.InetAddress
 
 class MainActivity : AppCompatActivity() {
 
+    fun Context.showToast(text: CharSequence)
+    {
+        Toast.makeText(this, text, Toast.LENGTH_LONG).show()
+    }
+
     internal inner class MyThread(caption: String) : Thread(caption) {
         // This is a test for GitHub
         fun showToast(toast: String) {
-            runOnUiThread { Toast.makeText(this@MainActivity, toast, Toast.LENGTH_LONG).show() }
+            runOnUiThread { this.showToast(toast) }
         }
 
         override fun run() {
