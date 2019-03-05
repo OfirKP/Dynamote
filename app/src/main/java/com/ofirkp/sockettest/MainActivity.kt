@@ -18,47 +18,44 @@ import java.net.InetAddress
 // Test 00:48 2\2\19 for GitHub
 
 class MainActivity : AppCompatActivity() {
-    fun showToast(toast: String) {
-        runOnUiThread { Toast.makeText(this@MainActivity, toast, Toast.LENGTH_LONG).show() }
-    }
-    fun getDetails(){
-        var c: DatagramSocket? = null
-        val sendData = "connect".toByteArray()
-
-        try {
-            c = DatagramSocket()
-            NetworkHelper.sendBroadcast(c, "connect", this@MainActivity);
-
-            //Wait for a response
-            val receivePacket = NetworkHelper.receiveUDPPacket(c);
-
-            //We have a response
-            showToast(javaClass.name + ">>> Broadcast response from server: " + receivePacket.address.hostAddress)
-
-            //Check if the message is correct
-            val ip = receivePacket.address.hostAddress
-            val data = String(receivePacket.data).trim { it <= ' ' }
-            runOnUiThread {
-                //showToast("Got computer details automatically")
-                textView.text = data
-                textIP.setText(ip)
-                textPort.setText(data)
-            }
-
-        } catch (e: Exception) {
-            c?.close()
-        }
-
-        c?.close()
-    }
 
     internal inner class MyThread(caption: String) : Thread(caption) {
         // This is a test for GitHub
-
+        fun showToast(toast: String) {
+            runOnUiThread { Toast.makeText(this@MainActivity, toast, Toast.LENGTH_LONG).show() }
+        }
 
         override fun run() {
-            getDetails()
-            showToast("Auto Connected")
+            var c: DatagramSocket? = null
+            val sendData = "Hello!".toByteArray()
+
+            try {
+                c = DatagramSocket()
+                val sendPacket = DatagramPacket(sendData, sendData.size, InetAddress.getByName("255.255.255.255"), 8888)
+                c.send(sendPacket)
+                showToast(javaClass.name + ">>> Request packet sent to: 255.255.255.255 (DEFAULT)")
+
+                //Wait for a response
+                val recvBuf = ByteArray(15000)
+                val receivePacket = DatagramPacket(recvBuf, recvBuf.size)
+                c.receive(receivePacket)
+
+                //We have a response
+                showToast(javaClass.name + ">>> Broadcast response from server: " + receivePacket.address.hostAddress)
+
+                //Check if the message is correct
+                val ip = receivePacket.address.hostAddress
+                val data = String(receivePacket.data).trim { it <= ' ' }
+                runOnUiThread {
+                    textView.text = data
+                    textIP.setText(ip)
+                }
+
+            } catch (e: Exception) {
+                c?.close()
+            }
+
+            c?.close()
         }
     }
 
@@ -67,10 +64,9 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         var outStream: DataOutputStream? = null
 
-        getDetailsBtn.setOnClickListener{
-            val thread = MyThread("t1")
-            thread.start()
-        }
+        val thread = MyThread("t1")
+        thread.start()
+
         connectBtn.setOnClickListener {
             Thread {
                 val client: Socket = Socket(textIP.text.toString(), textPort.text.toString().toInt())
