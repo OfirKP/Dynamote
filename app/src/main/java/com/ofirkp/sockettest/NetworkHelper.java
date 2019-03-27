@@ -6,13 +6,28 @@ import android.os.Looper;
 import android.widget.Toast;
 
 import java.io.IOException;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
+import java.net.*;
 
 public class NetworkHelper {
 
+    private static NetworkHelper single_instance = null;
+    private static SocketClient socket = null;
+
+    public static NetworkHelper getInstance() {
+        if (single_instance == null)
+            single_instance = new NetworkHelper();
+
+        return single_instance;
+    }
+
+    public static void setSocket(SocketClient s)
+    {
+        socket = s;
+    }
+
+    public static SocketClient getSocket() {
+        return socket;
+    }
 
     public static void sendBroadcast(DatagramSocket socket, String data, final Context context)
     {
@@ -48,5 +63,19 @@ public class NetworkHelper {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public static void sendToServer(final String message)
+    {
+        if(socket != null) {
+            Runnable runnable;
+            Thread t = new Thread(){
+                @Override
+                public void run() {
+                    socket.println(message);
+                }
+            };
+            t.start();
+        }
     }
 }

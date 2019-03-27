@@ -1,5 +1,6 @@
 package com.ofirkp.sockettest
 
+import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -18,57 +19,73 @@ import java.net.InetAddress
 // Test 00:48 2\2\19 for GitHub
 
 class MainActivity : AppCompatActivity() {
+    inline fun showToast(toast: String) {
+        runOnUiThread { Toast.makeText(this@MainActivity, toast, Toast.LENGTH_LONG).show() }
+    }
+    fun getDetails(){
+        var c: DatagramSocket? = null
+        val sendData = "connect".toByteArray()
+
+        try {
+            c = DatagramSocket()
+            NetworkHelper.sendBroadcast(c, "connect", this@MainActivity);
+
+            //Wait for a response
+            val receivePacket = NetworkHelper.receiveUDPPacket(c);
+
+            //We have a response
+            showToast(javaClass.name + ">>> Broadcast response from server: " + receivePacket.address.hostAddress)
+
+            //Check if the message is correct
+            val ip = receivePacket.address.hostAddress
+            val data = String(receivePacket.data).trim { it <= ' ' }
+            runOnUiThread {
+                //showToast("Got computer details automatically")
+                textView.text = data
+                textIP.setText(ip)
+                textPort.setText(data)
+            }
+
+        } catch (e: Exception) {
+            c?.close()
+        }
+
+        c?.close()
+    }
 
     internal inner class MyThread(caption: String) : Thread(caption) {
         // This is a test for GitHub
-        fun showToast(toast: String) {
-            runOnUiThread { Toast.makeText(this@MainActivity, toast, Toast.LENGTH_LONG).show() }
-        }
+
 
         override fun run() {
-            var c: DatagramSocket? = null
-            val sendData = "Hello!".toByteArray()
-
-            try {
-                c = DatagramSocket()
-                val sendPacket = DatagramPacket(sendData, sendData.size, InetAddress.getByName("255.255.255.255"), 8888)
-                c.send(sendPacket)
-                showToast(javaClass.name + ">>> Request packet sent to: 255.255.255.255 (DEFAULT)")
-
-                //Wait for a response
-                val recvBuf = ByteArray(15000)
-                val receivePacket = DatagramPacket(recvBuf, recvBuf.size)
-                c.receive(receivePacket)
-
-                //We have a response
-                showToast(javaClass.name + ">>> Broadcast response from server: " + receivePacket.address.hostAddress)
-
-                //Check if the message is correct
-                val ip = receivePacket.address.hostAddress
-                val data = String(receivePacket.data).trim { it <= ' ' }
-                runOnUiThread {
-                    textView.text = data
-                    textIP.setText(ip)
-                }
-
-            } catch (e: Exception) {
-                c?.close()
-            }
-
-            c?.close()
+            getDetails()
+            showToast("Auto Connected")
         }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        var outStream: DataOutputStream? = null
+        val outStream: DataOutputStream? = null
+        var client: SocketClient? = null
 
-        val thread = MyThread("t1")
-        thread.start()
-
+        wordBtn.setOnClickListener{
+            startActivity(Intent(this, WordActivity::class.java))
+        }
+        getDetailsBtn.setOnClickListener{
+            val thread = MyThread("t1")
+            thread.start()
+        }
         connectBtn.setOnClickListener {
             Thread {
+                client = SocketClient(InetAddress.getByName(textIP.text.toString()), textPort.text.toString().toInt())
+                val serverResponse = client?.readLine()
+                showToast("Server says $serverResponse")
+                NetworkHelper.setSocket(client)
+                disconnectBtn.setOnClickListener {
+                    client?.close()
+                }
+                /*
                 val client: Socket = Socket(textIP.text.toString(), textPort.text.toString().toInt())
                 val inFromServer = client.getInputStream()
                 val input = DataInputStream(inFromServer)
@@ -91,15 +108,19 @@ class MainActivity : AppCompatActivity() {
                 disconnectBtn.setOnClickListener {
                     client.close()
                 }
+                */
             }.start()
         }
         button.setOnClickListener{
             Thread {
-                outStream?.writeUTF(editText.text.toString())
+                client?.println(editText.text.toString())
+                showToast("Sent ${editText.text}!")
+                /*outStream?.writeUTF(editText.text.toString())
                 outStream?.flush()
                 runOnUiThread() {
                     Toast.makeText(this, "Sent ${editText.text}!", Toast.LENGTH_LONG).show()
                 }
+                */
             }.start()
         }
     }
