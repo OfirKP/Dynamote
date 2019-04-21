@@ -72,6 +72,9 @@ class MainActivity : AppCompatActivity() {
         wordBtn.setOnClickListener{
             startActivity(Intent(this, WordActivity::class.java))
         }
+        psBtn.setOnClickListener{
+            startActivity(Intent(this, PhotoshopActivity::class.java))
+        }
         getDetailsBtn.setOnClickListener{
             val thread = MyThread("t1")
             thread.start()
@@ -113,7 +116,7 @@ class MainActivity : AppCompatActivity() {
         }
         button.setOnClickListener{
             Thread {
-                client?.println(editText.text.toString())
+                NetworkHelper.sendToServer(editText.text.toString())
                 showToast("Sent ${editText.text}!")
                 /*outStream?.writeUTF(editText.text.toString())
                 outStream?.flush()
