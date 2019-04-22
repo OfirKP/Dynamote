@@ -41,7 +41,7 @@
 
         <TextView
             android:layout_marginTop="8dp"
-            android:id="@+id/textView4"
+            android:id="@+id/autoConnectTextView"
             android:textAlignment="center"
             android:textSize="12sp"
             android:textStyle="italic"
@@ -50,7 +50,9 @@
             android:text="Trying to auto-connect..." />
 
         <android.support.design.button.MaterialButton
+            android:enabled="false"
             android:text="Refresh"
+            android:id="@+id/refreshBtn"
             style="@style/Widget.MaterialComponents.Button"
             android:theme="@style/PrimaryButton"
             android:textSize="14sp"
@@ -60,14 +62,14 @@
             android:layout_height="wrap_content" />
 
         <android.support.design.button.MaterialButton
-            android:text="Enter Details Manually"
+            android:id="@+id/gotoManualConnectBtn"
             style="@style/Widget.MaterialComponents.Button.TextButton"
-            android:textSize="11sp"
-
-            android:layout_marginTop="4dp"
-            android:layout_gravity="center"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="4dp"
+            android:text="Enter Details Manually"
+            android:textSize="11sp" />
     </LinearLayout>
 
 

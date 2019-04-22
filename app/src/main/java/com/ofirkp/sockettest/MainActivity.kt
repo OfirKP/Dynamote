@@ -3,16 +3,9 @@ package com.ofirkp.sockettest
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
-import android.widget.TextView
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_main.*
-import java.io.DataInputStream
-import java.net.Socket
-import java.io.DataInputStream.readUTF
 import java.io.DataOutputStream
-import java.io.PrintWriter
-import java.net.DatagramPacket
 import java.net.DatagramSocket
 import java.net.InetAddress
 
@@ -79,15 +72,17 @@ class MainActivity : AppCompatActivity() {
             val thread = MyThread("t1")
             thread.start()
         }
-        connectBtn.setOnClickListener {
+        disconnectBtn.setOnClickListener {
+            NetworkHelper.sendToServer("quit")
+            client?.close()
+        }
+        manualConnectBtn.setOnClickListener {
             Thread {
                 client = SocketClient(InetAddress.getByName(textIP.text.toString()), textPort.text.toString().toInt())
                 val serverResponse = client?.readLine()
                 showToast("Server says $serverResponse")
                 NetworkHelper.setSocket(client)
-                disconnectBtn.setOnClickListener {
-                    client?.close()
-                }
+
                 /*
                 val client: Socket = Socket(textIP.text.toString(), textPort.text.toString().toInt())
                 val inFromServer = client.getInputStream()

@@ -57,7 +57,9 @@ public class NetworkHelper {
         byte[] recvBuf = new byte[15000];
         DatagramPacket packet = new DatagramPacket(recvBuf, recvBuf.length);
         try {
+            socket.setSoTimeout(4000);
             socket.receive(packet);
+            socket.setSoTimeout(0);
             return packet;
         } catch (IOException e) {
             e.printStackTrace();
