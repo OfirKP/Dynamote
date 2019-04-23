@@ -40,10 +40,6 @@ class AutoConnectFragment : Fragment() {
     var mBackgroundTask: AutoConnect? = null
     lateinit var textViewAutoConnect: TextView
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -51,7 +47,7 @@ class AutoConnectFragment : Fragment() {
 
         val view = inflater.inflate(R.layout.fragment_auto_connect, container, false)
         bar = view.progressBar
-        refresh = view.refreshBtn
+        refresh = view.refreshBtn as Button
         textViewAutoConnect = view.autoConnectTextView
 
         mBackgroundTask = AutoConnect()

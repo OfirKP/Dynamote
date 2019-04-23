@@ -39,7 +39,7 @@ public class NetworkHelper {
             handler.post(new Runnable() {
                 @Override
                 public void run() {
-                    Toast.makeText( context, ">>> Request packet sent to: 255.255.255.255 (DEFAULT)", Toast.LENGTH_LONG);
+                    //Toast.makeText( context, ">>> Request packet sent to: 255.255.255.255 (DEFAULT)", Toast.LENGTH_LONG);
                 }
             });
 
