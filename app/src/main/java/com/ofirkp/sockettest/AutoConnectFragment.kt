@@ -52,7 +52,7 @@ class AutoConnectFragment : Fragment() {
 
         mBackgroundTask = AutoConnect()
         mBackgroundTask!!.execute()
-        view.refreshBtn.setOnClickListener{
+        view.refreshBtn.setOnClickListener {
             setupBackgroundTask()
         }
         view.gotoManualConnectBtn.setOnClickListener { listener?.onFragmentInteraction2() }
@@ -88,6 +88,7 @@ class AutoConnectFragment : Fragment() {
 
     fun cancelTask(){
         mBackgroundTask?.cancel(true)
+        mBackgroundTask = null
     }
     /**
      * This interface must be implemented by activities that contain this
@@ -134,11 +135,12 @@ class AutoConnectFragment : Fragment() {
 
         override fun doInBackground(vararg params: Unit?) {
             val detailsSocket = DatagramSocket()
+            detailsSocket.broadcast = true
             val requestString = "connect".toByteArray()
             var receivePacket: DatagramPacket? = null
             for(i in 0..3){
                 if(isCancelled) break
-                 NetworkHelper.sendBroadcast(detailsSocket, String(requestString), context)
+                NetworkHelper.sendBroadcast(detailsSocket, String(requestString), context)
                 publishProgress("Sending broadcast #$i")
 
                 //Wait for a response
@@ -156,7 +158,7 @@ class AutoConnectFragment : Fragment() {
                 //Onto TCP
                 val client =
                     SocketClient(InetAddress.getByName(ip), data.toInt())
-                val serverResponse = client.readLine()
+                val serverResponse = client.readLine(3000)
                 Log.d("AutoConnectFragment", "Server says $serverResponse")
                 NetworkHelper.setSocket(client)
             }
@@ -173,8 +175,12 @@ class AutoConnectFragment : Fragment() {
             }
             else
             {
-               startActivity(Intent(context, MainActivity::class.java))
+                val intent = Intent(context, MainActivity::class.java)
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                startActivity(intent)
+                activity?.finish()
             }
+            mBackgroundTask = null
         }
 
     }

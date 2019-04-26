@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import kotlinx.android.synthetic.main.fragment_remote_list.view.*
 
 /**
  * A fragment representing a list of Items.
@@ -36,8 +37,8 @@ class RemotesFragment : android.support.v4.app.Fragment() {
         val view = inflater.inflate(R.layout.fragment_remote_list, container, false)
 
         // Set the adapter
-        if (view is RecyclerView) {
-            with(view) {
+        if (view.list is RecyclerView) {
+            with(view.list) {
                 layoutManager = when {
                     columnCount <= 1 -> LinearLayoutManager(context)
                     else -> GridLayoutManager(context, columnCount)

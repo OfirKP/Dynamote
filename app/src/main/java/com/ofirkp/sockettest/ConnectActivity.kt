@@ -41,6 +41,7 @@ class ConnectActivity : AppCompatActivity(), ManualConnectFragment.OnFragmentInt
         pagerAdapter = MyPagerAdapter(supportFragmentManager)
         pagerAdapter.addFragment(autoConnectFragment, "Auto Connect")
         pagerAdapter.addFragment(manualConnectFragment, "Manual Connect")
+        container_login.setPagingEnabled(false)
         container_login.adapter = pagerAdapter
 //        container_login.addOnPageChangeListener(object : OnPageChangeListener {
 //            override fun onPageScrollStateChanged(state: Int) {}

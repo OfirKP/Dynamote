@@ -129,7 +129,7 @@ class ManualConnectFragment : Fragment() {
 
             //Onto TCP
             val client = SocketClient(InetAddress.getByName(ip), port)
-            val serverResponse = client.readLine()
+            val serverResponse = client.readLine(3000)
             Log.d("AutoConnectFragment", "Server says $serverResponse")
             NetworkHelper.setSocket(client)
             return serverResponse
@@ -142,7 +142,9 @@ class ManualConnectFragment : Fragment() {
             connectBtn.isEnabled = true
             if(NetworkHelper.getSocket() == null || result?.isEmpty()!!)
             {
-                Toast.makeText(activity, "Couldn't connect to server", Toast.LENGTH_LONG).show()
+                //Toast.makeText(activity, "Couldn't connect to server", Toast.LENGTH_LONG).show()
+                mSnackBar = Snackbar.make(layout, "Couldn't connect to server.", Snackbar.LENGTH_SHORT)
+                mSnackBar.show()
             }
             else
             {

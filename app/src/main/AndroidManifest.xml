@@ -13,8 +13,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".MainActivity"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:label="Remotes">
+            android:label="Remotes"
+            android:theme="@style/AppTheme.NoActionBar">
 
         </activity>
         <activity android:name=".WordActivity"></activity>
@@ -23,6 +23,7 @@
             android:name=".ConnectActivity"
             android:label="Connect"
             >
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

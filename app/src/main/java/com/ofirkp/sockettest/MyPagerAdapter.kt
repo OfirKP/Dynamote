@@ -2,9 +2,10 @@ package com.ofirkp.sockettest
 
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
+import android.support.v4.app.FragmentPagerAdapter
 import android.support.v4.app.FragmentStatePagerAdapter
 
-class MyPagerAdapter(fm: FragmentManager?) : FragmentStatePagerAdapter(fm) {
+class MyPagerAdapter(fm: FragmentManager?) : FragmentPagerAdapter(fm) {
     private val fragments = ArrayList<Fragment>()
     private val titles = ArrayList<String>()
 
@@ -18,4 +19,6 @@ class MyPagerAdapter(fm: FragmentManager?) : FragmentStatePagerAdapter(fm) {
     override fun getItem(position: Int) = fragments[position]
 
     override fun getPageTitle(position: Int): CharSequence? = titles[position]
+
+    fun getPositionByTitle(title: String) = titles.indexOf(title)
 }

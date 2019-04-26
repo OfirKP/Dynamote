@@ -29,27 +29,26 @@ public class NetworkHelper {
         return socket;
     }
 
+    public static void disconnect() {
+        if(socket != null) {
+            sendToServer("quit");
+            socket.close();
+            socket = null;
+        }
+    }
+
     public static void sendBroadcast(DatagramSocket socket, String data, final Context context)
     {
         DatagramPacket packet = null;
         try {
             packet = new DatagramPacket(data.getBytes(), data.length(), InetAddress.getByName("255.255.255.255"), 8888);
             socket.send(packet);
-            Handler handler = new Handler(Looper.getMainLooper());
-            handler.post(new Runnable() {
-                @Override
-                public void run() {
-                    //Toast.makeText( context, ">>> Request packet sent to: 255.255.255.255 (DEFAULT)", Toast.LENGTH_LONG);
-                }
-            });
 
         } catch (UnknownHostException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
     }
 
     public static DatagramPacket receiveUDPPacket(DatagramSocket socket)
@@ -66,6 +65,7 @@ public class NetworkHelper {
         }
         return null;
     }
+
 
     public static void sendToServer(final String message)
     {
