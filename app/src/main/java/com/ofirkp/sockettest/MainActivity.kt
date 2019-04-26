@@ -74,7 +74,7 @@ class MainActivity : AppCompatActivity(), RemotesFragment.OnListFragmentInteract
             {
                 message = NetworkHelper.getSocket().readLine(0)
                 list = message.split(" ")
-                if(list.size >= 2 && list[0] == "switch")
+                if(list.size >= 2 && list[0] == "switch" && list[1] != "None")
                 {
                     newProgram = message.substring(list[0].length + 1)
                     runOnUiThread {
@@ -99,7 +99,9 @@ class MainActivity : AppCompatActivity(), RemotesFragment.OnListFragmentInteract
 
     fun disconnect()
     {
-        NetworkHelper.disconnect()
+        Thread {
+            NetworkHelper.disconnect()
+        }.start()
         val intent = Intent(this, ConnectActivity::class.java)
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         startActivity(intent)

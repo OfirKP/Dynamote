@@ -7,6 +7,7 @@ import android.widget.Toast;
 
 import java.io.IOException;
 import java.net.*;
+import java.util.Enumeration;
 
 public class NetworkHelper {
 
@@ -37,8 +38,7 @@ public class NetworkHelper {
         }
     }
 
-    public static void sendBroadcast(DatagramSocket socket, String data, final Context context)
-    {
+    public static void sendBroadcast(DatagramSocket socket, String data, final Context context) throws SocketException {
         DatagramPacket packet = null;
         try {
             packet = new DatagramPacket(data.getBytes(), data.length(), InetAddress.getByName("255.255.255.255"), 8888);
@@ -48,6 +48,31 @@ public class NetworkHelper {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
+        }
+
+        // Broadcast the message over all the network interfaces
+        Enumeration interfaces = NetworkInterface.getNetworkInterfaces();
+        while (interfaces.hasMoreElements()) {
+            NetworkInterface networkInterface = (NetworkInterface) interfaces.nextElement();
+
+            if (networkInterface.isLoopback() || !networkInterface.isUp()) {
+                continue; // Don't want to broadcast to the loopback interface
+            }
+
+            for (InterfaceAddress interfaceAddress : networkInterface.getInterfaceAddresses()) {
+                InetAddress broadcast = interfaceAddress.getBroadcast();
+                if (broadcast == null) {
+                    continue;
+                }
+
+                // Send the broadcast package!
+                try {
+                    packet = new DatagramPacket(data.getBytes(), data.length(), broadcast, 8888);
+                    socket.send(packet);
+                } catch (Exception e) {
+                }
+
+            }
         }
     }
 
