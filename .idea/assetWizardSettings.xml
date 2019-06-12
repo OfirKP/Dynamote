@@ -14,8 +14,8 @@
                         <option name="values">
                           <map>
                             <entry key="assetSourceType" value="FILE" />
-                            <entry key="outputName" value="ic_photoshop_cc" />
-                            <entry key="sourceFile" value="C:\Users\magic\Downloads\Temp\photoshop-cc.svg" />
+                            <entry key="outputName" value="back_icon" />
+                            <entry key="sourceFile" value="C:\Users\magic\Downloads\Temp\baseline-arrow_back_ios-24px.svg" />
                           </map>
                         </option>
                       </PersistentState>

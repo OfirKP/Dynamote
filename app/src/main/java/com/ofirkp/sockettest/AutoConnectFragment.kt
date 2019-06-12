@@ -125,7 +125,7 @@ class AutoConnectFragment : Fragment() {
 
         override fun onProgressUpdate(vararg values: String?) {
             super.onProgressUpdate(*values)
-            Toast.makeText(activity, values[0], Toast.LENGTH_LONG).show()
+            //Toast.makeText(activity, values[0], Toast.LENGTH_LONG).show()
         }
 
         override fun onCancelled() {

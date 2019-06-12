@@ -27,6 +27,9 @@ class WordFragment : Fragment() {
         view.underlineBtn.setOnClickListener{
             NetworkHelper.sendToServer("underline")
         }
+        view.italicBtn.setOnClickListener {
+            NetworkHelper.sendToServer("italic")
+        }
         view.boldBtn.setOnClickListener{
             NetworkHelper.sendToServer("bold")
         }

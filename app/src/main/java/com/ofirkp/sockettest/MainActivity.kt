@@ -1,6 +1,7 @@
 package com.ofirkp.sockettest
 
 import android.content.Intent
+import android.net.Network
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
@@ -60,8 +61,10 @@ class MainActivity : AppCompatActivity(), RemotesFragment.OnListFragmentInteract
         pagerAdapter.addFragment(remotesFragment, "All Remotes")
         pagerAdapter.addFragment(PhotoshopFragment.newInstance(), "Photoshop")
         pagerAdapter.addFragment(WordFragment.newInstance(), "Word")
+        //pagerAdapter.addFragment(PowerPointFragment.newInstance(), "PowerPoint")
 
         container_remotes.adapter = pagerAdapter
+        container_remotes.offscreenPageLimit = 3
         remotesTabLayout.setupWithViewPager(container_remotes)
 
         if(NetworkHelper.getSocket() != null)
@@ -70,7 +73,7 @@ class MainActivity : AppCompatActivity(), RemotesFragment.OnListFragmentInteract
             var message = ""
             lateinit var list: List<String>
 
-            while(true)
+            while(NetworkHelper.getSocket() != null)
             {
                 message = NetworkHelper.getSocket().readLine(0)
                 list = message.split(" ")
@@ -128,85 +131,6 @@ class MainActivity : AppCompatActivity(), RemotesFragment.OnListFragmentInteract
             disconnect()
         return super.onOptionsItemSelected(item)
     }
-
-    /*wordBtn.setOnClickListener{
-            startActivity(Intent(this, WordActivity::class.java))
-        }
-        psBtn.setOnClickListener{
-            startActivity(Intent(this, PhotoshopActivity::class.java))
-        }
-        getDetailsBtn.setOnClickListener{
-            val thread = MyThread("t1")
-            thread.start()
-        }
-        disconnectBtn.setOnClickListener {
-            NetworkHelper.sendToServer("quit")
-            client?.close()
-        }
-        manualConnectBtn.setOnClickListener {
-            Thread {
-                client = SocketClient(InetAddress.getByName(textIP.text.toString()), textPort.text.toString().toInt())
-                val serverResponse = client?.readLine()
-                showToast("Server says $serverResponse")
-                NetworkHelper.setSocket(client)
-
-            }.start()
-        }
-        button.setOnClickListener{
-            Thread {
-                NetworkHelper.sendToServer(editText.text.toString())
-                showToast("Sent ${editText.text}!")
-                /*outStream?.writeUTF(editText.text.toString())
-                outStream?.flush()
-                runOnUiThread() {
-                    Toast.makeText(this, "Sent ${editText.text}!", Toast.LENGTH_LONG).show()
-                }
-                */
-            }.start()
-        }
-
-    fun getDetails(){
-        var c: DatagramSocket? = null
-        val sendData = "connect".toByteArray()
-
-        try {
-            c = DatagramSocket()
-            NetworkHelper.sendBroadcast(c, "connect", this@MainActivity);
-
-            //Wait for a response
-            val receivePacket = NetworkHelper.receiveUDPPacket(c);
-
-            //We have a response
-            showToast(javaClass.name + ">>> Broadcast response from server: " + receivePacket.address.hostAddress)
-
-            //Check if the message is correct
-            val ip = receivePacket.address.hostAddress
-            val data = String(receivePacket.data).trim { it <= ' ' }
-            runOnUiThread {
-                //showToast("Got computer details automatically")
-                textView.text = data
-                textIP.setText(ip)
-                textPort.setText(data)
-            }
-
-        } catch (e: Exception) {
-            c?.close()
-        }
-
-        c?.close()
-    }
-
-    internal inner class MyThread(caption: String) : Thread(caption) {
-        // This is a test for GitHub
-
-
-        override fun run() {
-            getDetails()
-            showToast("Auto Connected")
-        }
-    }
-
-    */
 
 
 }
